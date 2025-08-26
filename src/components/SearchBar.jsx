@@ -1,25 +1,29 @@
+// src/components/SearchBar.jsx
 import React, { useState } from 'react';
 
 const SearchBar = ({ onSearch }) => {
   const [query, setQuery] = useState('');
 
-  const handleSearch = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (query.trim()) {
-      onSearch(query.trim());
+      onSearch(query);
     }
   };
 
   return (
-    <form onSubmit={handleSearch} className="flex justify-center my-8">
+   <form onSubmit={handleSubmit} className="flex items-center w-full max-w-sm">
       <input
         type="text"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search for books by title or author..."
-        className="w-full max-w-lg p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Search for a book..."
+        className="flex-grow p-2 sm:p-3 text-gray-800 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow duration-200"
       />
-      <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-r-lg hover:bg-blue-700 transition">
+      <button
+        type="submit"
+        className="bg-blue-500 text-white p-2 sm:p-3 rounded-r-md hover:bg-blue-600 transition-colors duration-200"
+      >
         Search
       </button>
     </form>
