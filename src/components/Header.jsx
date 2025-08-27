@@ -1,15 +1,16 @@
 // src/components/Header.jsx
 import React from 'react';
-import SearchBar from './SearchBar'; // Assuming SearchBar is a separate component
+import SearchBar from './SearchBar';
 
 const Header = ({ onSearch }) => {
   return (
     <header className="bg-gray-800 text-white p-4">
+      {/* This is the main Flexbox container for the entire header */}
       <div className="container mx-auto flex justify-between items-center">
-        {/* Title/Logo */}
+        {/* Title */}
         <h1 className="text-xl font-bold">📚 Book Library</h1>
 
-        {/* This div will hold the Search Bar, Login, and Cart */}
+        {/* This div groups the search bar and buttons and aligns them */}
         <div className="flex items-center space-x-4">
           <SearchBar onSearch={onSearch} />
 
@@ -20,7 +21,6 @@ const Header = ({ onSearch }) => {
 
           {/* Cart Icon */}
           <button className="relative">
-            {/* SVG for Cart */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
