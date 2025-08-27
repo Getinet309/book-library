@@ -1,7 +1,3 @@
-Here is the `README.md` file for the React Book Finder application, written in Markdown format. You can copy and paste this directly into a new file named `README.md` in your project's root directory.
-
------
-
 # React Book Finder App 📚
 
 This project is a dynamic React application that allows users to search for books using the **Open Library API**. It features a clean, responsive user interface, including a search bar, a list of books, and detailed views for individual books. The app also includes a basic login modal for an enhanced user experience.
