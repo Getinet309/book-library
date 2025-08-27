@@ -1,42 +1,113 @@
-#root {
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f0f2f5;
+}
+
+.app-container {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
+}
+
+.app-header {
+  background-color: #282c34;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-title {
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.login-button {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+
+/* --- MODIFIED CART STYLES START HERE --- */
+
+.cart-button {
+  position: relative;
+  background: none;
+  border: none;
+  color: #FCDD09; /* Yellow from Ethiopian flag */
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+/* New rule to control the size of the SVG icon inside the button */
+.cart-button svg {
+  height: 32px; /* Increased size */
+  width: 32px;  /* Increased size */
+}
+
+.cart-button:hover {
+  background-color: #4a4e57;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  background-color: #DA121A; /* Red from Ethiopian flag */
+  color: white;
+  font-size: 0.8rem; /* Slightly larger font */
+  font-weight: bold;
+  border-radius: 50%;
+  height: 20px; /* Increased size */
+  width: 20px;  /* Increased size */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #282c34; /* Adds a border to separate from icon */
+}
+
+/* --- MODIFIED CART STYLES END HERE --- */
+
+.app-main {
+  min-height: 80vh;
+}
+
+.status-text {
   text-align: center;
+  font-size: 1.25rem;
+  color: #555;
+  margin-top: 2rem;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.error-text {
+  color: #dc3545;
 }
