@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "tw:init": "tailwindcss init -p",
     "dev": "vite",
     "start": "npm run dev",
     "build": "vite build",
