@@ -74,7 +74,7 @@ You need to have **Node.js** and **npm** (Node Package Manager) installed on you
     npm start
     ```
 
-This will run the app in development mode. Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:3000) to view it in your browser. The page will automatically reload if you make changes to the code.
+This will run the app in development mode. Open [http://localhost:5175](https://www.google.com/search?q=http://localhost:5175) to view it in your browser. The page will automatically reload if you make changes to the code.
 
 -----
 
