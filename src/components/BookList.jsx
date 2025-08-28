@@ -1,34 +1,28 @@
-// src/components/BookList.jsx
-import React from 'react';
+// src/components/BookList.js
 
-const BookList = ({ books, onSelectBook, onAddToCart }) => {
+import React from 'react';
+import './BookList.css'; // We'll create this new CSS file
+
+const BookList = ({ books, onSelectBook }) => {
+  // Fallback image for books without a cover
+  const fallbackCover = 'https://via.placeholder.com/200x300.png?text=No+Cover';
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
+    <div className="book-grid">
       {books.map((book) => (
-        <div
-          key={book.key}
-          className="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105"
+        <div 
+          key={book.key} 
+          className="book-card" 
+          onClick={() => onSelectBook(book)}
         >
-          {/* Card content - can be clickable for details */}
-          <div className="cursor-pointer" onClick={() => onSelectBook(book)}>
-            <div className="p-4">
-              <h2 className="text-xl font-semibold text-gray-800 mb-2 truncate">
-                {book.title}
-              </h2>
-              <p className="text-sm text-gray-600">
-                by {book.author_name ? book.author_name.join(', ') : 'Unknown Author'}
-              </p>
-            </div>
-          </div>
-          
-          {/* Add to Cart button */}
-          <div className="p-4 border-t border-gray-200">
-            <button
-              onClick={() => onAddToCart(book)}
-              className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition duration-300"
-            >
-              Add to Cart
-            </button>
+          <img
+            src={book.cover_i ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg` : fallbackCover}
+            alt={book.title}
+            className="book-cover"
+          />
+          <div className="book-info">
+            <h3 className="book-title">{book.title}</h3>
+            <p className="book-author">{book.author_name?.[0]}</p>
           </div>
         </div>
       ))}

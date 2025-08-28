@@ -1,0 +1,60 @@
+/* src/components/BookList.css */
+
+.book-grid {
+  display: grid;
+  /* This creates responsive columns: they are at least 200px wide, 
+     but will expand to fill space. `auto-fill` adds as many columns as fit. */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem; /* Space between the grid items */
+  padding: 1rem 0;
+}
+
+.book-card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.book-cover {
+  width: 100%;
+  height: 300px; /* Fixed height for a uniform look */
+  object-fit: cover; /* Ensures the image covers the area without distortion */
+  background-color: #e0e0e0; /* A background for images that fail to load */
+}
+
+.book-info {
+  padding: 1rem;
+  flex-grow: 1; /* Allows this section to grow and push title/author down */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.book-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+  /* Truncate long titles */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;  
+  overflow: hidden;
+}
+
+.book-author {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
