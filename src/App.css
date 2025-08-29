@@ -132,3 +132,42 @@ body {
 .register-button:hover {
   background-color: #138496;
 }
+/* Update these rules in src/App.css */
+
+.cart-button {
+  position: relative;
+  background: none;
+  border: none;
+  color: #FCDD09; /* Yellow from Ethiopian flag */
+  cursor: pointer;
+  padding: 0 0.5rem;
+  border-radius: 50%;
+  transition: transform 0.3s ease;
+  
+  /* --- CHANGED --- */
+  font-size: 2.5rem; /* Significantly increased the icon size */
+  line-height: 1;   /* Ensures proper vertical alignment */
+}
+
+.cart-button:hover {
+  transform: scale(1.1);
+}
+
+.cart-badge {
+  position: absolute;
+  background-color: #DA121A; /* Red from Ethiopian flag */
+  color: white;
+  font-weight: bold;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #282c34;
+  
+  /* --- CHANGED --- */
+  font-size: 0.85rem;    /* Increased badge font size */
+  height: 24px;         /* Increased badge height */
+  width: 24px;          /* Increased badge width */
+  top: -5px;            /* Adjusted position for the larger icon */
+  right: -5px;          /* Adjusted position for the larger icon */
+}
