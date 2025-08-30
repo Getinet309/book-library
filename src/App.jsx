@@ -1,5 +1,3 @@
-// src/App.js
-
 import React, { useState, useEffect, useCallback } from 'react';
 import BookList from './components/BookList';
 import BookDetails from './components/BookDetails';
@@ -28,11 +26,12 @@ const App = () => {
   const [sortOption, setSortOption] = useState('relevance');
 
   const [favorites, setFavorites] = useState(getInitialFavorites);
+  const [showFavorites, setShowFavorites] = useState(false);
 
-  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state to track login status
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  
+
   // Save favorites to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('bookFavorites', JSON.stringify(favorites));
@@ -56,29 +55,82 @@ const App = () => {
   }, [searchTerm, currentPage, sortOption]);
 
   useEffect(() => {
-    fetchBooks();
-  }, [fetchBooks]);
+    // Only fetch books if the user is logged in and not in the favorites view
+    if (isLoggedIn && !showFavorites) {
+      fetchBooks();
+    } else if (!isLoggedIn) {
+      // If not logged in, show the login modal immediately
+      setIsLoginModalOpen(true);
+    }
+  }, [fetchBooks, showFavorites, isLoggedIn]);
 
   const handleSearch = (query) => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
     setSelectedBook(null);
+    setShowFavorites(false);
     setSearchTerm(query);
-    setCurrentPage(1); // Reset to first page on new search
+    setCurrentPage(1);
   };
 
   const handleToggleFavorite = (bookKey) => {
-    setFavorites((prev) => 
-      prev.includes(bookKey) 
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setFavorites((prev) =>
+      prev.includes(bookKey)
         ? prev.filter((key) => key !== bookKey)
         : [...prev, bookKey]
     );
   };
-  
-  // ... other handlers for login, registration, etc. ...
-  const handleSelectBook = (book) => setSelectedBook(book);
-  const handleBack = () => setSelectedBook(null);
-  const handleLogin = () => { setIsLoginModalOpen(false); };
-  const handleRegister = () => { setIsRegisterModalOpen(false); alert('Registration successful!'); };
 
+  const handleShowFavorites = () => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setShowFavorites(true);
+    setSelectedBook(null);
+  };
+
+  const handleSelectBook = (book) => {
+    if (!isLoggedIn) {
+      setIsLoginModalOpen(true);
+      return;
+    }
+    setSelectedBook(book);
+  };
+
+  const handleBack = () => {
+    if (selectedBook) {
+      setSelectedBook(null);
+    } else {
+      setShowFavorites(false);
+    }
+  };
+
+  const handleLogin = () => {
+    setIsLoggedIn(true); // Set logged-in status to true
+    setIsLoginModalOpen(false);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false); // Set logged-in status to false
+    setShowFavorites(false); // Reset to default view
+    setSelectedBook(null);
+    setBooks([]); // Clear books
+    setIsLoginModalOpen(true); // Open login modal again
+  };
+
+  const handleRegister = () => {
+    setIsRegisterModalOpen(false);
+    alert('Registration successful! Please log in.');
+  };
+
+  const favoriteBooks = books.filter(book => favorites.includes(book.key));
 
   return (
     <div className="app-container">
@@ -86,53 +138,83 @@ const App = () => {
         <div className="header-content">
           <h1 className="app-title">📚 Book Library</h1>
           <nav className="header-nav">
-            <SearchBar onSearch={handleSearch} />
-            {/* START - Add Login and Register buttons here */}
-            <button className="nav-button" onClick={() => setIsLoginModalOpen(true)}>Login</button>
-            <button className="nav-button" onClick={() => setIsRegisterModalOpen(true)}>Register</button>
-            {/* END - Add Login and Register buttons here */}
-            <button className="cart-button"> {/* This can be repurposed for favorites later */}
-              ❤<span className="cart-badge">{favorites.length}</span>
-            </button>
+            {isLoggedIn && <SearchBar onSearch={handleSearch} />}
+            {isLoggedIn ? (
+              <>
+                <button className="nav-button" onClick={handleLogout}>Logout</button>
+                <button className="cart-button" onClick={handleShowFavorites}>
+                  ❤<span className="cart-badge">{favorites.length}</span>
+                </button>
+              </>
+            ) : (
+              <>
+                <button className="nav-button" onClick={() => setIsLoginModalOpen(true)}>Login</button>
+                <button className="nav-button" onClick={() => setIsRegisterModalOpen(true)}>Register</button>
+              </>
+            )}
           </nav>
         </div>
-        <div className="sub-header">
-          <div className="sort-container">
-            <label htmlFor="sort">Sort by: </label>
-            <select id="sort" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
-              <option value="relevance">Relevance</option>
-              <option value="title">Title</option>
-              <option value="first_publish_year">Publish Year</option>
-            </select>
+        {isLoggedIn && (
+          <div className="sub-header">
+            <div className="sort-container">
+              <label htmlFor="sort">Sort by: </label>
+              <select id="sort" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
+                <option value="title">Title</option>
+                <option value="old">Publish Year (Oldest First)</option>
+                <option value="new">Publish Year (Newest First)</option>
+                <option value="author">Writer</option>
+              </select>
+            </div>
           </div>
-        </div>
+        )}
       </header>
-      
+
       <main className="app-main">
-        {error && <p className="status-text error-text">Error: {error}</p>}
-        {loading && <SkeletonGrid />}
-        {!loading && !error && (
+        {!isLoggedIn ? (
+          <p className="status-text">Please log in to view the book library. 📖</p>
+        ) : (
           <>
-            {selectedBook ? (
-              <BookDetails book={selectedBook} onBack={handleBack} />
-            ) : (
-              books.length > 0 ? (
-                <>
-                  <BookList 
-                    books={books} 
-                    onSelectBook={handleSelectBook} 
-                    favorites={favorites}
-                    onToggleFavorite={handleToggleFavorite}
-                  />
-                  <Pagination 
-                    currentPage={currentPage} 
-                    totalResults={totalResults}
-                    onPageChange={setCurrentPage}
-                  />
-                </>
-              ) : (
-                <p className="status-text">No books found. Try a different search!</p>
-              )
+            {error && <p className="status-text error-text">Error: {error}</p>}
+            {loading && <SkeletonGrid />}
+            {!loading && !error && (
+              <>
+                {selectedBook ? (
+                  <BookDetails book={selectedBook} onBack={handleBack} />
+                ) : showFavorites ? (
+                  <>
+                    <button onClick={handleBack} className="back-button">← Back to Search</button>
+                    <h2>My Favorites</h2>
+                    {favoriteBooks.length > 0 ? (
+                      <BookList
+                        books={favoriteBooks}
+                        onSelectBook={handleSelectBook}
+                        favorites={favorites}
+                        onToggleFavorite={handleToggleFavorite}
+                      />
+                    ) : (
+                      <p className="status-text">You have no favorite books yet.</p>
+                    )}
+                  </>
+                ) : (
+                  books.length > 0 ? (
+                    <>
+                      <BookList
+                        books={books}
+                        onSelectBook={handleSelectBook}
+                        favorites={favorites}
+                        onToggleFavorite={handleToggleFavorite}
+                      />
+                      <Pagination
+                        currentPage={currentPage}
+                        totalResults={totalResults}
+                        onPageChange={setCurrentPage}
+                      />
+                    </>
+                  ) : (
+                    <p className="status-text">No books found. Try a different search!</p>
+                  )
+                )}
+              </>
             )}
           </>
         )}
