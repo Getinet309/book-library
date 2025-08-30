@@ -21,6 +21,7 @@ const App = () => {
   const [selectedBook, setSelectedBook] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState('ethiopian history');
+  const [searchBy, setSearchBy] = useState('q'); // New state for search criteria
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState(0);
   const [sortOption, setSortOption] = useState('relevance');
@@ -28,7 +29,7 @@ const App = () => {
   const [favorites, setFavorites] = useState(getInitialFavorites);
   const [showFavorites, setShowFavorites] = useState(false);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state to track login status
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
 
@@ -42,7 +43,8 @@ const App = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://openlibrary.org/search.json?q=${searchTerm}&page=${currentPage}&sort=${sortOption}`);
+      const url = `https://openlibrary.org/search.json?${searchBy}=${searchTerm}&page=${currentPage}&sort=${sortOption}`;
+      const response = await fetch(url);
       if (!response.ok) throw new Error('Network response was not ok');
       const data = await response.json();
       setBooks(data.docs);
@@ -52,19 +54,17 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchTerm, currentPage, sortOption]);
+  }, [searchTerm, searchBy, currentPage, sortOption]);
 
   useEffect(() => {
-    // Only fetch books if the user is logged in and not in the favorites view
     if (isLoggedIn && !showFavorites) {
       fetchBooks();
     } else if (!isLoggedIn) {
-      // If not logged in, show the login modal immediately
       setIsLoginModalOpen(true);
     }
   }, [fetchBooks, showFavorites, isLoggedIn]);
 
-  const handleSearch = (query) => {
+  const handleSearch = (query, searchByOption) => {
     if (!isLoggedIn) {
       setIsLoginModalOpen(true);
       return;
@@ -72,6 +72,7 @@ const App = () => {
     setSelectedBook(null);
     setShowFavorites(false);
     setSearchTerm(query);
+    setSearchBy(searchByOption);
     setCurrentPage(1);
   };
 
@@ -113,16 +114,16 @@ const App = () => {
   };
 
   const handleLogin = () => {
-    setIsLoggedIn(true); // Set logged-in status to true
+    setIsLoggedIn(true);
     setIsLoginModalOpen(false);
   };
 
   const handleLogout = () => {
-    setIsLoggedIn(false); // Set logged-in status to false
-    setShowFavorites(false); // Reset to default view
+    setIsLoggedIn(false);
+    setShowFavorites(false);
     setSelectedBook(null);
-    setBooks([]); // Clear books
-    setIsLoginModalOpen(true); // Open login modal again
+    setBooks([]);
+    setIsLoginModalOpen(true);
   };
 
   const handleRegister = () => {
